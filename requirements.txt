@@ -1,2 +1,2 @@
-pyelftools==0.27
-pyalpm==0.10.6
+pyelftools
+pyalpm

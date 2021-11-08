@@ -28,6 +28,16 @@ import Namcap.depends
 import Namcap.tags
 import Namcap.version
 
+RED = '\033[31m'
+GREEN = '\033[32m'
+YELLOW = '\033[93m'
+RESET = '\033[0m'
+BOLD = '\033[01m'
+UNDERLINE = '\033[04m'
+
+ERROR_COUNT = 0
+WARNING_COUNT = 0
+
 # Functions
 def get_modules():
 	"""Return all possible modules (rules)"""
@@ -75,6 +85,13 @@ def check_rules_exclude(optlist):
 def show_messages(name, key, messages):
 	for msg in messages:
 		print("%s %s: %s" % (name, key, Namcap.tags.format_message(msg)))
+
+		if key == "E":
+			global ERROR_COUNT
+			ERROR_COUNT += 1
+		elif key == "W":
+			global WARNING_COUNT
+			WARNING_COUNT += 1
 
 def process_realpackage(package, modules):
 	"""Runs namcap checks over a package tarball"""
@@ -247,5 +264,22 @@ for package in packages:
 		process_pkgbuild(package, active_modules)
 	else:
 		print("Error: %s not package or PKGBUILD" % package)
+
+# Reset the formatting
+print(RESET, end="")
+
+has_error = False
+
+if ERROR_COUNT:
+	print(f"{RED}{BOLD}☓ {UNDERLINE}{ERROR_COUNT} {'errors' if ERROR_COUNT > 1 else 'error'}{RESET}{RED} found.{RESET}")
+	has_error = True
+if WARNING_COUNT:
+	print(f"{YELLOW}{BOLD}? {UNDERLINE}{WARNING_COUNT} {'warnings' if WARNING_COUNT > 1 else 'warning'}{RESET}{YELLOW} found.{RESET}")
+	has_error = True
+
+if not has_error:
+	print(f"{GREEN}{BOLD}√ All good.{RESET}")
+
+sys.exit(1 if has_error else 0)
 
 # vim: set ts=4 sw=4 noet:

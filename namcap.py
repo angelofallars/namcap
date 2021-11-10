@@ -31,6 +31,7 @@ import Namcap.version
 RED = '\033[31m'
 GREEN = '\033[32m'
 YELLOW = '\033[93m'
+DARKGRAY = "\033[37m"
 RESET = '\033[0m'
 BOLD = '\033[01m'
 UNDERLINE = '\033[04m'
@@ -254,6 +255,8 @@ if len(active_modules) == 0:
 
 # Go through each package, get the info, and apply the rules
 for package in packages:
+    print(f"Checking {DARKGRAY}{package}{RESET} ...")
+
     if not os.access(package, os.R_OK):
         print("Error: Problem reading %s" % package)
         usage()
@@ -280,6 +283,7 @@ if WARNING_COUNT:
 if not has_error:
     print(f"{GREEN}{BOLD}√ All good.{RESET}")
 
+print()  # Print a newline
 sys.exit(1 if has_error else 0)
 
 # vim: set ts=4 sw=4 noet:
